@@ -1,0 +1,380 @@
+[
+  {
+    "objectID": "slides.html#plan-for-today",
+    "href": "slides.html#plan-for-today",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Plan for today",
+    "text": "Plan for today\n\nSetup check\nWhy spatial optimisation?\nHow speed works\nSpatially optimised common designs\nEvaluating designs\nDesigns with more complex structure\nMET designs\nExtensions (relationship matrices, custom objectives)\nGotchas, getting help, Q&A"
+  },
+  {
+    "objectID": "slides.html#getting-set-up",
+    "href": "slides.html#getting-set-up",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Getting set up",
+    "text": "Getting set up\n\nWorkshop page: \nCopy code from the Exercises page, not from the slides\n\n\n# install.packages(\"pak\")\npak::pak(\"biometryhub/speed\")\n\nI will assume a working knowledge of experimental design, but please ask if something isn’t clear."
+  },
+  {
+    "objectID": "slides.html#does-it-work-for-you",
+    "href": "slides.html#does-it-work-for-you",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Does it work for you?",
+    "text": "Does it work for you?\n\n\nlibrary(speed)\nd &lt;- initialise_design_df(4, 4, 4)\nautoplot(speed(d, \n      swap = \"treatment\", \n      seed = 1))\n\n\nOptimising level: single treatment within whole design \nOptimal score reached at iteration 787 for level single treatment within whole design"
+  },
+  {
+    "objectID": "slides.html#field-heterogeneity-and-neighbours",
+    "href": "slides.html#field-heterogeneity-and-neighbours",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Field heterogeneity and neighbours",
+    "text": "Field heterogeneity and neighbours\n\n\n\nSpatial trends are well known to exist in field trials1\nNeighbour effects impact treatments\nSpatially optimised designs guard against a sub-optimal randomisation\nAlternatives are not FOSS and/or lack documentation and/or features\n\n\n\n\n\n\n\n\nGilmour, A. R., Cullis, B. R., & Verbyla, A. P. (1997). Accounting for Natural and Extraneous Variation in the Analysis of Field Experiments. Journal of Agricultural, Biological, and Environmental Statistics, 2(3), 269–293. https://doi.org/10.2307/1400446"
+  },
+  {
+    "objectID": "slides.html#restricted-randomisation",
+    "href": "slides.html#restricted-randomisation",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Restricted randomisation",
+    "text": "Restricted randomisation\n\nImpose some restrictions \\(\\rightarrow\\) improve spatial balance of treatments.\nOptimisation problem…"
+  },
+  {
+    "objectID": "slides.html#the-workflow",
+    "href": "slides.html#the-workflow",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "The workflow",
+    "text": "The workflow\n\nSet up the layout (initialise_design_df() or otherwise)\nspeed(): optimise the layout\nautoplot(): visualise it\nsummary(): evaluate it"
+  },
+  {
+    "objectID": "slides.html#four-questions-to-ask-of-every-design",
+    "href": "slides.html#four-questions-to-ask-of-every-design",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Four questions to ask of every design",
+    "text": "Four questions to ask of every design\n\n\n\nQuestion\nArgument\n\n\n\n\nWhat moves?\nswap, linked_cols*\n\n\nWhere is it allowed to move to?\nswap_within\n\n\nWhat should it be balanced across?\nspatial_factors\n\n\nWhat counts as a ‘neighbour’?\ngrid_factors + ...\n\n\n\n*: optional\n\nEvery design in this workshop is an answer to these four questions. Refer back to this slide for each new design: CRD, RCBD, split-plot, MET."
+  },
+  {
+    "objectID": "slides.html#the-default-objective",
+    "href": "slides.html#the-default-objective",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "The default objective",
+    "text": "The default objective\n\nAdjacency: penalises the same treatment in neighbouring plots (what counts as a neighbour?)\nBalance: penalises a treatment repeating in the same rows or columns (what should it be balanced across?)\nMinimise the (optionally weighted) sum of these two components"
+  },
+  {
+    "objectID": "slides.html#simulated-annealing-in-one-slide",
+    "href": "slides.html#simulated-annealing-in-one-slide",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Simulated annealing in one slide",
+    "text": "Simulated annealing in one slide\n\n\n\n\n\n\n%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '22px', 'fontFamily': 'Arial', 'lineColor': '#414042'}}}%%\nflowchart LR\n  A([\"&lt;span style='display:inline-block;padding:14px 30px;font-size:30px;font-weight:bold'&gt;Design&lt;/span&gt;\"]) --&gt; B[\"Swap two plots,&lt;br/&gt;score the new design\"]\n  B --&gt; C{\"Better?\"}\n  C -- \"yes\" --&gt; D[\"Accept\"]\n  C -- \"no\" --&gt; E[\"Sometimes accept&lt;br/&gt;(less often as it cools)\"]\n  D --&gt; A\n  E --&gt; A\n  A -- \"optimal score or&lt;br/&gt;no improvement\" --&gt; H([\"Stop\"])\n\n  classDef hub fill:#00808b,stroke:#004d54,stroke-width:5px,color:#ffffff\n  classDef design fill:#00808b,stroke:#00808b,color:#ffffff\n  classDef step fill:#f2f2f2,stroke:#00808b,color:#414042\n  classDef good fill:#b6d438,stroke:#54921e,color:#414042\n  classDef maybe fill:#ffbc42,stroke:#ec8525,color:#414042\n  class A hub\n  class H design\n  class B,C step\n  class D good\n  class E maybe"
+  },
+  {
+    "objectID": "slides.html#spatially-balanced-design-set-up-the-layout",
+    "href": "slides.html#spatially-balanced-design-set-up-the-layout",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Spatially balanced design1: set up the layout",
+    "text": "Spatially balanced design1: set up the layout\n\nsbd_design &lt;- initialise_design_df(items = 8, nrows = 8, ncols = 4)\nhead(sbd_design)\n\n  row col treatment\n1   1   1        T1\n2   2   1        T2\n3   3   1        T3\n4   4   1        T4\n5   5   1        T5\n6   6   1        T6\n\n\nDue to the restricted randomisation and optimisation applied to these designs, they are not strictly randomised, so this is not a completely randomised design. Hence we use slightly different terminology."
+  },
+  {
+    "objectID": "slides.html#sbd-the-four-questions",
+    "href": "slides.html#sbd-the-four-questions",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "SBD: the four questions",
+    "text": "SBD: the four questions\n\n\n\n\n\n\n\n\nQuestion\nArgument\nInput\n\n\n\n\nWhat moves?\nswap\ntreatment\n\n\nWhere is it allowed to move to?\nswap_within\ndefault\n\n\nWhat should it be balanced across?\nspatial_factors\ndefault\n\n\nWhat counts as a ‘neighbour’?\ngrid_factors\ndefault"
+  },
+  {
+    "objectID": "slides.html#sbd-optimise",
+    "href": "slides.html#sbd-optimise",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "SBD: optimise",
+    "text": "SBD: optimise\n\nsbd_result &lt;- speed(sbd_design,\n                    swap = \"treatment\",\n                    seed = 42)\n\nOptimising level: single treatment within whole design \nOptimal score reached at iteration 730 for level single treatment within whole design \n\nsbd_result\n\nOptimised Experimental Design\n----------------------------\nScore: 2.285714 \nIterations Run: 730 \nStopped Early: TRUE \nTreatments: T1, T2, T3, T4, T5, T6, T7, T8 \nSeed: 42"
+  },
+  {
+    "objectID": "slides.html#sbd-plot",
+    "href": "slides.html#sbd-plot",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "SBD: plot",
+    "text": "SBD: plot\n\nautoplot(sbd_result)"
+  },
+  {
+    "objectID": "slides.html#spatially-balanced-block-design-set-up-the-layout",
+    "href": "slides.html#spatially-balanced-block-design-set-up-the-layout",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Spatially balanced block design: set up the layout",
+    "text": "Spatially balanced block design: set up the layout\n\nsbbd_design &lt;- initialise_design_df(\n  items = paste0(\"V\", 1:6), \n  nrows = 4, ncols = 6,\n  block_nrows = 1, block_ncols = 6\n)"
+  },
+  {
+    "objectID": "slides.html#sbbd-the-four-questions",
+    "href": "slides.html#sbbd-the-four-questions",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "SBBD: the four questions",
+    "text": "SBBD: the four questions\n\n\n\n\n\n\n\n\nQuestion\nArgument\nInput\n\n\n\n\nWhat moves?\nswap\ntreatment\n\n\nWhere is it allowed to move to?\nswap_within\nblock\n\n\nWhat should it be balanced across?\nspatial_factors\ndefault\n\n\nWhat counts as a ‘neighbour’?\ngrid_factors\ndefault"
+  },
+  {
+    "objectID": "slides.html#sbbd-optimise",
+    "href": "slides.html#sbbd-optimise",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "SBBD: optimise",
+    "text": "SBBD: optimise\n\nsbbd_result &lt;- speed(sbbd_design,\n                     swap = \"treatment\",\n                     swap_within = \"block\",\n                     seed = 42)\n\nOptimising level: single treatment within block \nOptimal score reached at iteration 329 for level single treatment within block"
+  },
+  {
+    "objectID": "slides.html#sbbd-layout",
+    "href": "slides.html#sbbd-layout",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "SBBD layout",
+    "text": "SBBD layout\n\nautoplot(sbbd_result)"
+  },
+  {
+    "objectID": "slides.html#latin-square",
+    "href": "slides.html#latin-square",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Latin square",
+    "text": "Latin square\n\nls_design &lt;- initialise_design_df(items = 5, nrows = 5, ncols = 5)\nls_result &lt;- speed(ls_design, swap = \"treatment\", seed = 42)\n\nOptimising level: single treatment within whole design \nLevel: single treatment within whole design Iteration: 1000 Score: 1 Best: 1 Since Improvement: 308 \nOptimal score reached at iteration 1040 for level single treatment within whole design \n\nls_result$score\n\n[1] 0\n\n\n\nScore of 0 means it found a Latin square without being told to."
+  },
+  {
+    "objectID": "slides.html#your-turn",
+    "href": "slides.html#your-turn",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Your turn",
+    "text": "Your turn\nExercise 1 (about 10 minutes, on the Exercises page)\n\n8 varieties × 4 replicates in a 4 × 8 field\nEach block is a 2 × 4 patch, not a whole row\nAnswer the four questions, optimise, and check each block has every variety once"
+  },
+  {
+    "objectID": "slides.html#summary-structure-and-optimisation",
+    "href": "slides.html#summary-structure-and-optimisation",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "summary(): structure and optimisation",
+    "text": "summary(): structure and optimisation\nsummary(sbbd_result), part 1 of 2\n\n\nDesign Summary\n==============\n\nStructure\n---------\nLayout:       4 rows x 6 cols (24 plots)\nTreatments:   6\nReplication:  4 each\nSpatial:      row (4), col (6)\n\nOptimisation\n------------\nSeed:         42\nObjective:    objective_function\nScore:        1.6  (initial 34 -&gt; final 1.6)\n              adjacency  0\n              balance    1.6\nOptimal:      1.6  (reached)\nIterations:   329 / 10,000 (optimal reached)\nTemperature:  start 100, cooling 0.99"
+  },
+  {
+    "objectID": "slides.html#summary-evaluation",
+    "href": "slides.html#summary-evaluation",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "summary(): evaluation",
+    "text": "summary(): evaluation\nsummary(sbbd_result), part 2 of 2\n\n\nDesign Summary\n==============\n\nEvaluation\n----------\nConnected:    connected - treatment estimable given row + col + block [model (row + col + block)]\nConcurrence:  complete blocks - not informative\nBlk. spread:  each treatment in 4 of 4 blocks [block: block]\nRepl. span:   worst-case 2 (row), 2 (col) across 6 replicated treatment(s)\nEfficiency:   not requested (set efficiency = TRUE)\nSelf-adj.:    none\nNeighbour:    min 1, max 4 over 15 pairs (variance 0.6952)"
+  },
+  {
+    "objectID": "slides.html#what-the-sections-tell-you",
+    "href": "slides.html#what-the-sections-tell-you",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "What the sections tell you",
+    "text": "What the sections tell you\n\nStructure: layout, replication, spatial factors\nOptimisation: final score split into adjacency and balance\nEvaluation: connectedness, concurrence, replicate span\nFlags: iteration cap reached, unequal replication, disconnected design"
+  },
+  {
+    "objectID": "slides.html#more-complex-design-types",
+    "href": "slides.html#more-complex-design-types",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "More complex design types",
+    "text": "More complex design types\n\nDesigns with hierarchy\nDesigns with multiple treatments\nDesigns with multiple sites"
+  },
+  {
+    "objectID": "slides.html#split-plot-describe-the-structure",
+    "href": "slides.html#split-plot-describe-the-structure",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Split-plot: describe the structure",
+    "text": "Split-plot: describe the structure\n\nsplits &lt;- list(\n  subplot   = list(items = letters[1:4], nrows = 1, ncols = 1),\n  wholeplot = list(items = LETTERS[1:3], nrows = 1, ncols = 4),\n  block     = list(nrows = 3, ncols = 4)\n)\nsp_design &lt;- initialise_split_design_df(splits = splits, rep_dim = c(4, 1))"
+  },
+  {
+    "objectID": "slides.html#split-plot-the-four-questions",
+    "href": "slides.html#split-plot-the-four-questions",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Split-plot: the four questions",
+    "text": "Split-plot: the four questions\nOne answer per level (wp, then sp):\n\n\n\n\n\n\n\n\n\nQuestion\nArgument\nWhole plots\nSubplots\n\n\n\n\nWhat moves?\nswap\nwholeplot_treatment\nsubplot_treatment\n\n\nWhere?\nswap_within\nblock\nwholeplot\n\n\nBalance\nspatial_factors\ndefault\ndefault\n\n\nNeighbour\ngrid_factors\ndefault\ndefault"
+  },
+  {
+    "objectID": "slides.html#split-plot-optimise-level-by-level",
+    "href": "slides.html#split-plot-optimise-level-by-level",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Split-plot: optimise level by level",
+    "text": "Split-plot: optimise level by level\n\noptimise &lt;- list(\n  wp = list(\n    swap        = \"wholeplot_treatment\",\n    swap_within = \"block\",\n    swap_all    = TRUE\n  ),\n  sp = list(\n    swap        = \"subplot_treatment\",\n    swap_within = \"wholeplot\"\n  )\n)\n\nsp_result &lt;- speed(sp_design, \n  optimise = optimise, \n  seed = 42)\n\nOptimising level: wp \nLevel: wp Iteration: 1000 Score: 100 Best: 100 Since Improvement: 1000 \nLevel: wp Iteration: 2000 Score: 100 Best: 100 Since Improvement: 2000 \nEarly stopping at iteration 2000 for level wp \nOptimising level: sp \nOptimal score reached at iteration 570 for level sp \n\n\n\nswap_all = TRUE moves all subplots of a whole plot together."
+  },
+  {
+    "objectID": "slides.html#split-plot-layout",
+    "href": "slides.html#split-plot-layout",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Split-plot layout",
+    "text": "Split-plot layout"
+  },
+  {
+    "objectID": "slides.html#p-rep-any-data-frame-will-do",
+    "href": "slides.html#p-rep-any-data-frame-will-do",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "p-rep: any data frame will do",
+    "text": "p-rep: any data frame will do\n\nprep_design &lt;- data.frame(\n  row   = rep(1:14, each = 10),\n  col   = rep(1:10, times = 14),\n  block = rep(rep(1:2, each = 5), 14),\n  entry = c(rep(\"check\", 10),           # 1 check, 10 replicates\n            paste0(\"V\", rep(1:30, 2)),  # 30 varieties, 2 replicates each\n            paste0(\"V\", 31:100))        # 70 varieties, 1 replicate each\n)"
+  },
+  {
+    "objectID": "slides.html#p-rep-the-four-questions",
+    "href": "slides.html#p-rep-the-four-questions",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "p-rep: the four questions",
+    "text": "p-rep: the four questions\n\n\n\nQuestion\nArgument\nInput\n\n\n\n\nWhat moves?\nswap\nentry\n\n\nWhere?\nswap_within\ndefault\n\n\nBalance\nspatial_factors\n~ block + row + col\n\n\nNeighbour\ngrid_factors\ndefault"
+  },
+  {
+    "objectID": "slides.html#p-rep-optimise",
+    "href": "slides.html#p-rep-optimise",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "p-rep: optimise",
+    "text": "p-rep: optimise\n\nprep_result &lt;- speed(prep_design,\n                     swap = \"entry\",\n                     spatial_factors = ~ block + row + col,\n                     seed = 42)\n\nOptimising level: single entry within whole design \nLevel: single entry within whole design Iteration: 1000 Score: 3.41703 Best: 3.41703 Since Improvement: 0 \nLevel: single entry within whole design Iteration: 2000 Score: 3.29703 Best: 3.29703 Since Improvement: 27 \nLevel: single entry within whole design Iteration: 3000 Score: 3.29703 Best: 3.29703 Since Improvement: 1027 \nEarly stopping at iteration 3973 for level single entry within whole design \n\n\n\nNo initialise_ helper needed: any data frame with row/col works. Block in spatial_factors balances the duplicated entries across blocks.\nWhy not swap_within = “block”? That restricts swaps to within a block, so which entries sit in which block is frozen at whatever the starting layout happened to be. Here the starting layout has both replicates of every two-replicate variety in the same block (0/30 split across blocks), and swap_within = “block” leaves it that way. With block in spatial_factors the balance score penalises uneven block membership, so entries move between blocks: 30/30 varieties end up with one replicate in each block. Blocks in a p-rep are incomplete, so there is no “every treatment once per block” to protect; contrast the RCBD, where blocks start complete and swap_within keeps them complete."
+  },
+  {
+    "objectID": "slides.html#p-rep-layout",
+    "href": "slides.html#p-rep-layout",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "p-rep layout",
+    "text": "p-rep layout\n\nautoplot(prep_result, treatments = \"entry\")"
+  },
+  {
+    "objectID": "slides.html#p-rep-layout-checks-and-a-replicated-variety",
+    "href": "slides.html#p-rep-layout-checks-and-a-replicated-variety",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "p-rep layout: checks and a replicated variety",
+    "text": "p-rep layout: checks and a replicated variety\n\n\nThe check (teal) appears 10 times, 5 in each block. V1 (amber) is one of the 30 twice-replicated varieties: one replicate in each block. The other 70 are single replicates (white)."
+  },
+  {
+    "objectID": "slides.html#also-covered-in-the-vignettes",
+    "href": "slides.html#also-covered-in-the-vignettes",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Also covered in the vignettes",
+    "text": "Also covered in the vignettes\n\nSplit-split plot and strip-plot\nIncomplete block designs\nRow–column designs with blocking\nlinked_cols: keep variety names with their codes"
+  },
+  {
+    "objectID": "slides.html#your-turn-1",
+    "href": "slides.html#your-turn-1",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Your turn",
+    "text": "Your turn\nExercise 2 (about 10 minutes, on the Exercises page)\n\n4 tillage methods (whole plots) × 3 varieties (subplots), in 3 blocks\nAnswer the four questions for each level, then optimise\nCheck every block has every tillage method once, and every whole plot every variety once"
+  },
+  {
+    "objectID": "slides.html#several-sites-one-treatment-set",
+    "href": "slides.html#several-sites-one-treatment-set",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Several sites, one treatment set",
+    "text": "Several sites, one treatment set\n\nall_treatments &lt;- c(rep(1:50, 7), rep(51:57, 8))\nmet_design &lt;- initialise_design_df(\n  items = all_treatments,\n  designs = list(\n    a = list(nrows = 28, ncols = 5, block_nrows = 7,  block_ncols = 5),\n    b = list(nrows = 20, ncols = 3, block_nrows = 10, block_ncols = 3),\n    c = list(nrows = 20, ncols = 4, block_nrows = 10, block_ncols = 4),\n    d = list(nrows = 15, ncols = 4, block_nrows = 5,  block_ncols = 4),\n    e = list(nrows = 22, ncols = 3, block_nrows = 11, block_ncols = 3)\n  )\n)\nmet_design$site_col   &lt;- paste(met_design$site, met_design$col,   sep = \"_\")\nmet_design$site_block &lt;- paste(met_design$site, met_design$block, sep = \"_\")"
+  },
+  {
+    "objectID": "slides.html#met-questions",
+    "href": "slides.html#met-questions",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "MET: the four questions",
+    "text": "MET: the four questions\nTwo levels: first connect the sites, then balance within each site.\n\n\n\n\n\n\n\n\n\nQuestion\nArgument\nConnectivity\nBalance\n\n\n\n\nWhat moves?\nswap\ntreatment\ntreatment\n\n\nWhere?\nswap_within\ndefault\nsite\n\n\nBalance\nspatial_factors\n~ site\n~ site_col + site_block\n\n\nNeighbour\ngrid_factors\nby = \"site\"\nby = \"site\""
+  },
+  {
+    "objectID": "slides.html#optimise-connectivity-then-balance",
+    "href": "slides.html#optimise-connectivity-then-balance",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Optimise connectivity, then balance",
+    "text": "Optimise connectivity, then balance\nMET Part 1\n\noptimise &lt;- list(\n  connectivity = list(\n    spatial_factors = ~ site\n  ),\n  balance = list(\n    swap_within     = \"site\",\n    spatial_factors = ~ site_col + site_block\n  )\n)"
+  },
+  {
+    "objectID": "slides.html#optimise-connectivity-then-balance-1",
+    "href": "slides.html#optimise-connectivity-then-balance-1",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Optimise connectivity, then balance",
+    "text": "Optimise connectivity, then balance\nMET Part 2\n\nmet_result &lt;- speed(\n  data = met_design,\n  swap = \"treatment\",\n  optimise = optimise,\n  grid_factors = list(dim1 = \"row\", dim2 = \"col\", by = \"site\"),\n  early_stop_iterations = 5000,\n  optimise_params = optim_params(random_initialisation = TRUE, adj_weight = 0),\n  seed = 112, quiet = TRUE\n)\n\n\ngrid_factors by says each site is its own grid: plots at different sites are never neighbours. Without it, sites reusing coordinates are refused."
+  },
+  {
+    "objectID": "slides.html#met-layout",
+    "href": "slides.html#met-layout",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "MET layout",
+    "text": "MET layout"
+  },
+  {
+    "objectID": "slides.html#relationship-matrices",
+    "href": "slides.html#relationship-matrices",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Relationship matrices",
+    "text": "Relationship matrices\nTreat related entries as partial repeats when scoring adjacency.\n\nitems  &lt;- paste0(\"T\", 1:16)\ngroups &lt;- setNames(rep(c(\"A\", \"B\", \"C\", \"D\"), each = 4), items)\nrel &lt;- matrix(0, 16, 16, dimnames = list(items, items))\nwithin &lt;- c(A = 0.8, B = 0.4, C = 0.1, D = 0.0)\nfor (g in names(within)) rel[items[groups == g], \nitems[groups == g]] &lt;- within[[g]]\ndiag(rel) &lt;- 1\nhead(rel)\n\n    T1  T2  T3  T4  T5  T6  T7  T8 T9 T10 T11 T12 T13 T14 T15 T16\nT1 1.0 0.8 0.8 0.8 0.0 0.0 0.0 0.0  0   0   0   0   0   0   0   0\nT2 0.8 1.0 0.8 0.8 0.0 0.0 0.0 0.0  0   0   0   0   0   0   0   0\nT3 0.8 0.8 1.0 0.8 0.0 0.0 0.0 0.0  0   0   0   0   0   0   0   0\nT4 0.8 0.8 0.8 1.0 0.0 0.0 0.0 0.0  0   0   0   0   0   0   0   0\nT5 0.0 0.0 0.0 0.0 1.0 0.4 0.4 0.4  0   0   0   0   0   0   0   0\nT6 0.0 0.0 0.0 0.0 0.4 1.0 0.4 0.4  0   0   0   0   0   0   0   0"
+  },
+  {
+    "objectID": "slides.html#relationship-matrices-optimise",
+    "href": "slides.html#relationship-matrices-optimise",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Relationship matrices: optimise",
+    "text": "Relationship matrices: optimise\n\nrel_design &lt;- initialise_design_df(items = rep(items, 4), nrows = 8, ncols = 8,\n                                   block_nrows = 4, block_ncols = 4)\nrel_result &lt;- speed(rel_design, swap = \"treatment\", swap_within = \"block\",\n                    relationship = rel, seed = 42, quiet = TRUE)\n\nrel_result               \n\nOptimised Experimental Design\n----------------------------\nScore: 4.266667 \nIterations Run: 3511 \nStopped Early: TRUE \nTreatments: T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16 \nSeed: 42"
+  },
+  {
+    "objectID": "slides.html#relationship-matrices-the-effect",
+    "href": "slides.html#relationship-matrices-the-effect",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Relationship matrices: the effect",
+    "text": "Relationship matrices: the effect\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTiles show each treatment’s group (A: highly related, D: unrelated).\n\nBoth runs use seed 42. Group A (similarity 0.8) is pushed apart the most; group D (0.0) is free to sit together, which is why D tiles still touch.\nMeasured on this design (related pairs among neighbours, weighted by the matrix): default 6.8, with the relationship matrix 0.0. Over 20 seeds the means are 7.3 and 0.0.\nThe final scores are identical (4.27) in both runs: neither has any same-treatment neighbours, and both reach the same balance score. So the score alone does not show the difference; the relationship only changes which layouts count as good, not how good the best one scores."
+  },
+  {
+    "objectID": "slides.html#custom-objectives",
+    "href": "slides.html#custom-objectives",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Custom objectives",
+    "text": "Custom objectives\nAn objective returns a list with a score; lower is better.\n\nget_cooccurrence &lt;- function(design_df, swap) {\n  pairs &lt;- unlist(lapply(unique(design_df$block), function(block) {\n    combn(sort(as.character(design_df[design_df$block == block, swap])), 2,\n          FUN = function(x) paste(x, collapse = \",\"))\n  }))\n  return(as.list(table(pairs)))\n}\n\nbibd_objective &lt;- function(layout_df, swap, spatial_cols,\n                           row_column = \"row\", col_column = \"col\", ...) {\n  adj &lt;- calculate_adjacency_score(layout_df, swap, row_column, col_column)\n  bal &lt;- calculate_balance_score(layout_df, swap, spatial_cols)\n  pair_var &lt;- var(as.numeric(get_cooccurrence(layout_df, swap)))\n  return(list(score = round(adj + bal + 10 * pair_var, 10)))\n}"
+  },
+  {
+    "objectID": "slides.html#custom-objectives-a-bibd",
+    "href": "slides.html#custom-objectives-a-bibd",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Custom objectives: a BIBD",
+    "text": "Custom objectives: a BIBD\n\nbibd_df &lt;- initialise_design_df(items = 5, nrows = 3, ncols = 10,\n                                block_nrows = 3, block_ncols = 1)\nbibd_result &lt;- speed(bibd_df, swap = \"treatment\",\n                     spatial_factors = ~ block + row + col,\n                     obj_function = bibd_objective,\n                     optimise_params = optim_params(random_initialisation = TRUE),\n                     seed = 42, quiet = TRUE)\nunique(unlist(get_cooccurrence(bibd_result$design_df, \"treatment\")))\n\n[1] 3\n\n\n\nv = 5, b = 10, k = 3, r = 6, lambda = 3: every pair together 3 times."
+  },
+  {
+    "objectID": "slides.html#custom-objectives-every-pair-together-3-times",
+    "href": "slides.html#custom-objectives-every-pair-together-3-times",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Custom objectives: every pair together 3 times",
+    "text": "Custom objectives: every pair together 3 times\n\nT1 and T2 share a block exactly 3 times, like every other pair.\n\nEach column is a block of three plots. T1 and T2 sit together in blocks 1, 5 and 10 (in the seed-42 run); every other pair of the five treatments does the same number of times (lambda = 3). With the default objective the pair counts vary between 2 and 4."
+  },
+  {
+    "objectID": "slides.html#gotchas",
+    "href": "slides.html#gotchas",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Gotchas",
+    "text": "Gotchas\n\nTreatment column not called treatment? Pass treatments = to autoplot()\nCompanion columns (variety names) don’t move unless named in linked_cols\nMET sites reuse coordinates: set grid_factors = list(..., by = \"site\")\nCheck summary() flags: a run that hit the iteration cap may need more iterations"
+  },
+  {
+    "objectID": "slides.html#getting-help",
+    "href": "slides.html#getting-help",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Getting help",
+    "text": "Getting help\n\nDocumentation and vignettes: https://biometryhub.github.io/speed/\nBugs and feature requests: https://github.com/biometryhub/speed/issues\n?speed, ?initialise_design_df, ?optim_params"
+  },
+  {
+    "objectID": "slides.html#questions",
+    "href": "slides.html#questions",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Questions?",
+    "text": "Questions?"
+  },
+  {
+    "objectID": "exercises.html",
+    "href": "exercises.html",
+    "title": "Exercises",
+    "section": "",
+    "text": "Copy each block into your R session. Solutions are folded under Solution. Try the exercise first.\nlibrary(speed)\nEvery design is an answer to the same four questions (from the slides):\n*: optional"
+  },
+  {
+    "objectID": "exercises.html#exercise-1-a-spatially-balanced-block-design-with-two-dimensional-blocks-about-10-minutes",
+    "href": "exercises.html#exercise-1-a-spatially-balanced-block-design-with-two-dimensional-blocks-about-10-minutes",
+    "title": "Exercises",
+    "section": "Exercise 1: a spatially balanced block design with two-dimensional blocks (about 10 minutes)",
+    "text": "Exercise 1: a spatially balanced block design with two-dimensional blocks (about 10 minutes)\nEight varieties, four replicates, in a 4 × 8 field. Instead of whole rows, each block is a 2 × 4 patch of plots.\n\nSet up the layout with initialise_design_df(). Look at the block column.\nOptimise it so that treatments only move within their block.\nPlot it, then check with table() that every block contains every variety once.\n\nBefore you run it, write down your answers to the four questions.\n\n\nSolution\nsbbd &lt;- initialise_design_df(\n  items = paste0(\"V\", 1:8), nrows = 4, ncols = 8,\n  block_nrows = 2, block_ncols = 4\n)\nsbbd_opt &lt;- speed(sbbd, swap = \"treatment\", swap_within = \"block\", seed = 1)\nautoplot(sbbd_opt)\ntable(sbbd_opt$design_df$block, sbbd_opt$design_df$treatment)\n\n\nIf you finish early, compare how often a variety repeats in the same row or column (table(row, treatment)) with and without spatial_factors = ~ block + row + col."
+  },
+  {
+    "objectID": "exercises.html#exercise-2-a-split-plot-about-10-minutes",
+    "href": "exercises.html#exercise-2-a-split-plot-about-10-minutes",
+    "title": "Exercises",
+    "section": "Exercise 2: a split-plot (about 10 minutes)",
+    "text": "Exercise 2: a split-plot (about 10 minutes)\nFour tillage methods (whole plots, A to D) and three varieties (subplots, a to c), in three blocks. Each whole plot is a 1 × 3 strip of three subplots, and each block holds four whole plots in a 4 × 3 patch.\n\nDescribe the structure with a splits list and build it with initialise_split_design_df(). The blocks are stacked on top of each other (rep_dim).\nWrite the optimise list: one entry per level, answering the four questions for each. Whole plots must move as a unit.\nPlot both levels, then check with table() that every block has every tillage method once, and every whole plot has every variety once.\n\nHint: the slides’ example has the same shape. Which numbers change?\n\n\nSolution\nsplits &lt;- list(\n  subplot   = list(items = letters[1:3], nrows = 1, ncols = 1),\n  wholeplot = list(items = LETTERS[1:4], nrows = 1, ncols = 3),\n  block     = list(nrows = 4, ncols = 3)\n)\nsp &lt;- initialise_split_design_df(splits = splits, rep_dim = c(3, 1))\n\noptimise &lt;- list(\n  wp = list(\n    swap        = \"wholeplot_treatment\",\n    swap_within = \"block\",\n    swap_all    = TRUE\n  ),\n  sp = list(\n    swap        = \"subplot_treatment\",\n    swap_within = \"wholeplot\"\n  )\n)\nsp_opt &lt;- speed(sp, optimise = optimise, seed = 1)\n\nautoplot(sp_opt, treatments = \"wholeplot_treatment\")\nautoplot(sp_opt, treatments = \"subplot_treatment\", block = \"wholeplot\")\n\ntable(sp_opt$design_df$block, sp_opt$design_df$wholeplot_treatment)\ntable(sp_opt$design_df$wholeplot, sp_opt$design_df$subplot_treatment)\n\n\nIf you finish early, add a column giving each variety a name (for example \"Scepter\", \"Vixen\", \"Calibre\") and use linked_cols so the names stay with their codes. See the linked_cols section of the main vignette."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "",
+    "text": "You need R (≥ 4.1) and the speed package:\ninstall.packages(\"pak\")\npak::pak(\"biometryhub/speed\")\nCheck that it works:\nlibrary(speed)\nd &lt;- initialise_design_df(items = 4, nrows = 4, ncols = 4)\nautoplot(speed(d, swap = \"treatment\", seed = 1))"
+  },
+  {
+    "objectID": "index.html#before-the-workshop",
+    "href": "index.html#before-the-workshop",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "",
+    "text": "You need R (≥ 4.1) and the speed package:\ninstall.packages(\"pak\")\npak::pak(\"biometryhub/speed\")\nCheck that it works:\nlibrary(speed)\nd &lt;- initialise_design_df(items = 4, nrows = 4, ncols = 4)\nautoplot(speed(d, swap = \"treatment\", seed = 1))"
+  },
+  {
+    "objectID": "index.html#materials",
+    "href": "index.html#materials",
+    "title": "Spatially optimised experimental designs with speed",
+    "section": "Materials",
+    "text": "Materials\n\nSlides\nExercises: copy-and-paste code with solutions\nspeed documentation"
+  }
+]
