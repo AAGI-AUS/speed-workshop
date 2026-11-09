@@ -1,0 +1,29 @@
+---
+title: "Spatially optimised experimental designs with speed"
+subtitle: "Hands-on workshop"
+---
+
+<!-- TODO: date, venue, presenters -->
+
+## Before the workshop
+
+You need R (≥ 4.1) and the speed package:
+
+```r
+install.packages("pak")
+pak::pak("biometryhub/speed")
+```
+
+Check that it works:
+
+```r
+library(speed)
+d <- initialise_design_df(items = 4, nrows = 4, ncols = 4)
+autoplot(speed(d, swap = "treatment", seed = 1))
+```
+
+## Materials
+
+- [Slides](slides.qmd)
+- [Exercises](exercises.qmd): copy-and-paste code with solutions
+- [speed documentation](https://biometryhub.github.io/speed/)

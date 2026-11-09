@@ -1,0 +1,101 @@
+---
+title: "Exercises"
+execute:
+  eval: false
+code-fold: false
+---
+
+Copy each block into your R session. Solutions are folded under **Solution**. Try the exercise first.
+
+```{r}
+library(speed)
+```
+
+Every design is an answer to the same four questions (from the slides):
+
+| Question                           | Argument          |
+| ---------------------------------- | ----------------- |
+| What moves?                        | `swap`, `linked_cols`* |
+| Where is it allowed to move to?    | `swap_within`     |
+| What should it be balanced across? | `spatial_factors` |
+| What counts as a 'neighbour'?      | `grid_factors`    |
+
+*: optional
+
+## Exercise 1: a spatially balanced block design with two-dimensional blocks (about 10 minutes)
+
+Eight varieties, four replicates, in a 4 × 8 field. Instead of whole rows, each
+block is a 2 × 4 patch of plots.
+
+1. Set up the layout with `initialise_design_df()`. Look at the `block` column.
+2. Optimise it so that treatments only move within their block.
+3. Plot it, then check with `table()` that every block contains every variety once.
+
+Before you run it, write down your answers to the four questions.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Solution"
+sbbd <- initialise_design_df(
+  items = paste0("V", 1:8), nrows = 4, ncols = 8,
+  block_nrows = 2, block_ncols = 4
+)
+sbbd_opt <- speed(sbbd, swap = "treatment", swap_within = "block", seed = 1)
+autoplot(sbbd_opt)
+table(sbbd_opt$design_df$block, sbbd_opt$design_df$treatment)
+```
+
+If you finish early, compare how often a variety repeats in the same row or
+column (`table(row, treatment)`) with and without
+`spatial_factors = ~ block + row + col`.
+
+## Exercise 2: a split-plot (about 10 minutes)
+
+Four tillage methods (whole plots, `A` to `D`) and three varieties (subplots,
+`a` to `c`), in three blocks. Each whole plot is a 1 × 3 strip of three
+subplots, and each block holds four whole plots in a 4 × 3 patch.
+
+1. Describe the structure with a `splits` list and build it with
+   `initialise_split_design_df()`. The blocks are stacked on top of each other
+   (`rep_dim`).
+2. Write the `optimise` list: one entry per level, answering the four
+   questions for each. Whole plots must move as a unit.
+3. Plot both levels, then check with `table()` that every block has every
+   tillage method once, and every whole plot has every variety once.
+
+Hint: the slides' example has the same shape. Which numbers change?
+
+```{r}
+#| code-fold: true
+#| code-summary: "Solution"
+splits <- list(
+  subplot   = list(items = letters[1:3], nrows = 1, ncols = 1),
+  wholeplot = list(items = LETTERS[1:4], nrows = 1, ncols = 3),
+  block     = list(nrows = 4, ncols = 3)
+)
+sp <- initialise_split_design_df(splits = splits, rep_dim = c(3, 1))
+
+optimise <- list(
+  wp = list(
+    swap        = "wholeplot_treatment",
+    swap_within = "block",
+    swap_all    = TRUE
+  ),
+  sp = list(
+    swap        = "subplot_treatment",
+    swap_within = "wholeplot"
+  )
+)
+sp_opt <- speed(sp, optimise = optimise, seed = 1)
+
+autoplot(sp_opt, treatments = "wholeplot_treatment")
+autoplot(sp_opt, treatments = "subplot_treatment", block = "wholeplot")
+
+table(sp_opt$design_df$block, sp_opt$design_df$wholeplot_treatment)
+table(sp_opt$design_df$wholeplot, sp_opt$design_df$subplot_treatment)
+```
+
+If you finish early, add a column giving each variety a name (for example
+`"Scepter"`, `"Vixen"`, `"Calibre"`) and use `linked_cols` so the names stay
+with their codes. See the [`linked_cols` section of the main vignette](https://biometryhub.github.io/speed/articles/speed.html#keeping-related-columns-together).
+

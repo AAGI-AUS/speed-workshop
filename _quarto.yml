@@ -1,0 +1,29 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "speed workshop"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: slides.qmd
+        text: Slides
+      - href: exercises.qmd
+        text: Exercises
+    right:
+      - icon: github
+        href: https://github.com/biometryhub/speed
+      - text: speed docs
+        href: https://biometryhub.github.io/speed/
+
+execute:
+  freeze: auto
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+    code-overflow: wrap

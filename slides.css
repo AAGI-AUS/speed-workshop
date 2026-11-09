@@ -1,0 +1,153 @@
+/* Smaller footnotes and asides, sitting closer to the bottom of the slide */
+.reveal .slide aside,
+.reveal .slide div.aside {
+  bottom: 4px;
+  font-size: 0.45em;
+  line-height: 1.2;
+}
+
+.reveal .slide aside .aside-footnotes,
+.reveal .slide aside .aside-footnotes li,
+.reveal .slide aside .aside-footnotes p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Table headers: the AAGI theme sets white header text and a teal band, but
+   the teal can lose to revealjs's own table rules, leaving white on white.
+   Higher specificity restores it. */
+.reveal .slides section table thead tr,
+.reveal .slides section table thead th,
+.reveal .slides section table tr.header,
+.reveal .slides section table tr.header th {
+  background-color: #00808b;
+  color: #ffffff;
+}
+
+/* Taller code output panels. revealjs caps pre code at max-height: 400px,
+   which adds a scrollbar to long output such as summary(). */
+.reveal .cell-output pre code,
+.reveal .cell-output-stdout pre code {
+  max-height: 620px;
+}
+
+/* Compact tables on slides marked {.smaller}: smaller text, tighter cells. */
+.reveal .slides section.smaller table {
+  font-size: 0.75em;
+}
+
+.reveal .slides section.smaller table th,
+.reveal .slides section.smaller table td {
+  padding: 0.25rem 0.5rem;
+}
+
+/* Shrink the first column to its text; the other columns share the rest. */
+.reveal .slides section.smaller table th:first-child,
+.reveal .slides section.smaller table td:first-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
+/* MET card: Argument column to its text, Connectivity narrower, and the
+   Balance column (the longest entries) gets the most room. */
+.reveal .slides section#met-questions table th:nth-child(2),
+.reveal .slides section#met-questions table td:nth-child(2) {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.reveal .slides section#met-questions table th:nth-child(3),
+.reveal .slides section#met-questions table td:nth-child(3) {
+  width: 28%;
+}
+
+.reveal .slides section#met-questions table th:nth-child(4),
+.reveal .slides section#met-questions table td:nth-child(4) {
+  width: 45%;
+}
+
+/* Tighter body text. The AAGI theme sets a body line-height of 1.6, which is
+   far too loose for slides. */
+.reveal,
+.reveal .slides section {
+  line-height: 1.25;
+}
+
+.reveal .slides section ul > li,
+.reveal .slides section ol > li {
+  margin-top: 0;
+  margin-bottom: 0.2em;
+  line-height: 1.2;
+}
+
+.reveal .slides section ul ul,
+.reveal .slides section ol ol,
+.reveal .slides section ul ol,
+.reveal .slides section ol ul {
+  margin-top: 0.15em;
+}
+
+.reveal .slides section p {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+
+/* Title slide background. title-slide-main.png is a field photo (top 76 px of
+   144) over a row of partner logos (bottom 68 px). The photo stays full width
+   as the slide background; we cover the logo row in white and redraw it at
+   90% width, left aligned. Slide width is 1050px, so 1050 * 68/1122 = 64px
+   for the original logo row and 0.9 * 1050 * 68/1122 = 57px for the new one. */
+.reveal .backgrounds > .slide-background:first-child::before,
+.reveal .backgrounds > .slide-background:last-child::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 64px;
+  background: #ffffff;
+}
+
+.reveal .backgrounds > .slide-background:first-child::after,
+.reveal .backgrounds > .slide-background:last-child::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 90%;
+  aspect-ratio: 1122 / 68;
+  background-image: url("title-slide-main.png");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: left bottom;
+}
+
+/* Title slide: smaller title, tighter spacing between title, subtitle,
+   author, email and date */
+#title-slide h1.title {
+  font-size: 1.6em;
+  line-height: 1.15;
+  margin: 0 0 0.15em 0;
+}
+
+#title-slide .subtitle {
+  font-size: 0.9em;
+  line-height: 1.2;
+  margin: 0 0 0.4em 0;
+}
+
+#title-slide .quarto-title-authors,
+#title-slide .quarto-title-author,
+#title-slide .quarto-title-author-name,
+#title-slide .quarto-title-author-email,
+#title-slide .author,
+#title-slide .date {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 1.25;
+}
+
+#title-slide .quarto-title-author-email,
+#title-slide .date {
+  font-size: 0.6em;
+}

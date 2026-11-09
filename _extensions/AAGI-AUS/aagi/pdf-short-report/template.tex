@@ -1,0 +1,212 @@
+%s AAGI Short Report — Quarto/Pandoc LaTeX template
+\documentclass[12pt]{article}
+
+% -------------------------
+% Engine + fonts
+% -------------------------
+\usepackage{iftex}
+
+\ifPDFTeX
+  \usepackage{lmodern}
+  \usepackage{microtype}
+  \renewcommand{\familydefault}{\sfdefault}
+\else
+  \usepackage{fontspec}
+  \usepackage{microtype}
+
+  % ---- Safe font selection (CI-safe) ----
+  \defaultfontfeatures{Ligatures=TeX}
+
+  \IfFontExistsTF{Proxima Nova}{
+    \newcommand{\aagisafefont}{Proxima Nova}
+  }{
+    \IfFontExistsTF{Arial}{
+      \newcommand{\aagisafefont}{Arial}
+    }{
+      \newcommand{\aagisafefont}{TeX Gyre Heros}
+    }
+  }
+
+  \setsansfont[Scale=MatchLowercase]{\aagisafefont}
+  \renewcommand{\familydefault}{\sfdefault}
+
+  % ---- CRITICAL: catch ALL fontspec calls ----
+  \let\originalfontspec\fontspec
+  \renewcommand{\fontspec}[2][]{\originalfontspec[#1]{\aagisafefont}}
+
+  % ---- Monospace ----
+  \setmonofont[
+    Path        = assets/fonts/,
+    Extension   = .ttf,
+    UprightFont = FiraCode-Regular,
+    BoldFont    = FiraCode-Bold,
+    ItalicFont  = FiraCode-Light,
+    Scale       = MatchLowercase
+  ]{FiraCode-Regular}
+\fi
+
+% -------------------------
+% Layout
+% -------------------------
+\usepackage[paper=a4paper,top=22mm,left=12mm,right=12mm,bottom=22mm]{geometry}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage{amsmath,amssymb}
+\usepackage{afterpage}
+\usepackage{float}
+
+% -------------------------
+% Colours + links
+% -------------------------
+\usepackage[dvipsnames,table]{xcolor}
+
+\definecolor{aagiteal}{HTML}{00808B}
+\definecolor{aagibrightgreen}{HTML}{B6D438}
+\definecolor{aagigreen}{HTML}{54921E}
+\definecolor{aagiblue}{HTML}{648FD2}
+\definecolor{aagiyellow}{HTML}{FFBC42}
+\definecolor{aagiorange}{HTML}{EC8525}
+\definecolor{aagiblack}{HTML}{414042}
+\definecolor{aagigrey}{HTML}{F2F2F2}
+
+\usepackage[colorlinks=true,allcolors=aagiteal]{hyperref}
+
+% flextable LaTeX dependencies
+\usepackage{array}
+\usepackage{hhline}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[normalem]{ulem}
+
+\newlength\Oldarrayrulewidth
+\newlength\Oldtabcolsep
+
+\usepackage[most]{tcolorbox}
+
+\newtcolorbox{note}{
+  colback=aagiteal!7,
+  colframe=aagiteal!7,
+  notitle,
+  sharp corners,
+  borderline west={2pt}{0pt}{aagiteal},
+  borderline east={2pt}{0pt}{aagiteal},
+  enhanced,
+  breakable
+}
+
+% -------------------------
+% Pandoc compatibility
+% -------------------------
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}
+}
+
+\newenvironment{CSLReferences}[2]{%
+  \begin{list}{}{%
+    \setlength{\leftmargin}{1.5em}%
+    \setlength{\itemindent}{-1.5em}%
+    \setlength{\labelwidth}{0pt}%
+    \setlength{\labelsep}{0pt}%
+    \setlength{\itemsep}{0pt}%
+    \setlength{\parsep}{0pt}%
+    \renewcommand{\makelabel}[1]{}%
+  }%
+}{\end{list}}
+
+\providecommand{\citeproctext}{}
+\providecommand{\citeproc}[2]{#2}
+\providecommand{\CSLBlock}[1]{#1}
+\providecommand{\CSLLeftMargin}[1]{#1}
+\providecommand{\CSLRightInline}[1]{#1}
+\providecommand{\CSLIndent}[1]{#1}
+
+% -------------------------
+% Tables
+% -------------------------
+\usepackage{colortbl}
+\usepackage{longtable}
+\setlength{\LTcapwidth}{\textwidth}
+
+\usepackage{etoolbox}
+\AtBeginEnvironment{longtable}{%
+  \let\orignewpage\newpage
+  \let\origpagebreak\pagebreak
+  \let\origclearpage\clearpage
+  \renewcommand{\newpage}{}%
+  \renewcommand{\pagebreak}{}%
+  \renewcommand{\clearpage}{}%
+}
+\AtEndEnvironment{longtable}{%
+  \let\newpage\orignewpage
+  \let\pagebreak\origpagebreak
+  \let\clearpage\origclearpage
+}
+
+% -------------------------
+% Page styling
+% -------------------------
+\usepackage{fancyhdr}
+\fancyhf{}
+
+\fancypagestyle{firstpage}{%
+  \fancyhf{}
+  \fancyhead[R]{\includegraphics[height=2.3cm]{AAGI_logo}}
+  \fancyfoot[C]{%
+    \rule{\textwidth}{0.4pt}\\[-10pt]
+    \includegraphics[width=\paperwidth]{AAGI_SP_Logo_Block-Portrait}}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+\fancypagestyle{otherpages}{%
+  \fancyhf{}
+  \fancyhead[R]{\sffamily $short-title$}
+  \fancyfoot[C]{%
+    \rule{\textwidth}{0.4pt}\\[-2pt]
+    {\sffamily Correspondence email: \href{mailto:$correspondence-email$}{$correspondence-email$}}
+    \hfill {\sffamily \thepage}}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+\pagestyle{otherpages}
+
+% code syntax highlighting
+$highlighting-macros$
+
+\providecommand{\pandocbounded}[1]{#1}
+
+% -------------------------
+% Document
+% -------------------------
+\begin{document}
+
+% First page styling
+\thispagestyle{firstpage}
+\newgeometry{left=12mm,right=12mm,top=17mm,bottom=24mm,includefoot}
+\afterpage{\aftergroup\restoregeometry}
+
+\vspace*{0.6cm}
+
+{\Large\sffamily\bfseries $title$}\\[2pt]
+{\large\sffamily $subtitle$}\\[6pt]
+
+Prepared for: $prepared-for$ ($prepared-for-org$)\\
+Prepared by: $prepared-by$ ($university$, $aagi-node$)\\
+Correspondence email: \href{mailto:$correspondence-email$}{$correspondence-email$}\\[2pt]
+Last updated: $date$
+
+% -------------------------
+% TOC (same page)
+% -------------------------
+$if(toc)$
+\setcounter{page}{1}
+\tableofcontents
+$endif$
+
+\par
+
+% -------------------------
+% Body
+% -------------------------
+$body$
+
+\end{document}
