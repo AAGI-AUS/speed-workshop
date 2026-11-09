@@ -11,7 +11,7 @@
     "href": "slides.html#getting-set-up",
     "title": "Spatially optimised experimental designs with speed",
     "section": "Getting set up",
-    "text": "Getting set up\n\nWorkshop page: \nCopy code from the Exercises page, not from the slides\n\n\n# install.packages(\"pak\")\npak::pak(\"biometryhub/speed\")\n\nI will assume a working knowledge of experimental design, but please ask if something isn’t clear."
+    "text": "Getting set up\n\nWorkshop page: https://aagi-aus.github.io/speed-workshop/\nSlides and exercises are on that page. You can copy code from the slides.\n\n\n# install.packages(\"pak\")\npak::pak(\"biometryhub/speed\")\n\n I will assume a working knowledge of experimental design, but please ask if something isn’t clear."
   },
   {
     "objectID": "slides.html#does-it-work-for-you",
@@ -32,7 +32,7 @@
     "href": "slides.html#restricted-randomisation",
     "title": "Spatially optimised experimental designs with speed",
     "section": "Restricted randomisation",
-    "text": "Restricted randomisation\n\nImpose some restrictions \\(\\rightarrow\\) improve spatial balance of treatments.\nOptimisation problem…"
+    "text": "Restricted randomisation\n\nImpose some restrictions \\(\\rightarrow\\) improve spatial balance of treatments.\nOptimisation problem…\n\n\n\n\n\n\nSystematic\n\n\n\n\n\n\nFully random\n\n\n\n\n\n\nRestricted randomisation"
   },
   {
     "objectID": "slides.html#the-workflow",
@@ -81,7 +81,7 @@
     "href": "slides.html#sbd-optimise",
     "title": "Spatially optimised experimental designs with speed",
     "section": "SBD: optimise",
-    "text": "SBD: optimise\n\nsbd_result &lt;- speed(sbd_design,\n                    swap = \"treatment\",\n                    seed = 42)\n\nOptimising level: single treatment within whole design \nOptimal score reached at iteration 730 for level single treatment within whole design \n\nsbd_result\n\nOptimised Experimental Design\n----------------------------\nScore: 2.285714 \nIterations Run: 730 \nStopped Early: TRUE \nTreatments: T1, T2, T3, T4, T5, T6, T7, T8 \nSeed: 42"
+    "text": "SBD: optimise\n\nsbd_result &lt;- speed(sbd_design,\n                    swap = \"treatment\",\n                    seed = 42)\n\nOptimising level: single treatment within whole design \nOptimal score reached at iteration 730 for level single treatment within whole design \n\n\n\nsbd_result\n\nOptimised Experimental Design\n----------------------------\nScore: 2.285714 \nIterations Run: 730 \nStopped Early: TRUE \nTreatments: T1, T2, T3, T4, T5, T6, T7, T8 \nSeed: 42"
   },
   {
     "objectID": "slides.html#sbd-plot",
@@ -117,13 +117,6 @@
     "title": "Spatially optimised experimental designs with speed",
     "section": "SBBD layout",
     "text": "SBBD layout\n\nautoplot(sbbd_result)"
-  },
-  {
-    "objectID": "slides.html#latin-square",
-    "href": "slides.html#latin-square",
-    "title": "Spatially optimised experimental designs with speed",
-    "section": "Latin square",
-    "text": "Latin square\n\nls_design &lt;- initialise_design_df(items = 5, nrows = 5, ncols = 5)\nls_result &lt;- speed(ls_design, swap = \"treatment\", seed = 42)\n\nOptimising level: single treatment within whole design \nLevel: single treatment within whole design Iteration: 1000 Score: 1 Best: 1 Since Improvement: 308 \nOptimal score reached at iteration 1040 for level single treatment within whole design \n\nls_result$score\n\n[1] 0\n\n\n\nScore of 0 means it found a Latin square without being told to."
   },
   {
     "objectID": "slides.html#your-turn",
@@ -217,11 +210,11 @@
     "text": "p-rep layout\n\nautoplot(prep_result, treatments = \"entry\")"
   },
   {
-    "objectID": "slides.html#p-rep-layout-checks-and-a-replicated-variety",
-    "href": "slides.html#p-rep-layout-checks-and-a-replicated-variety",
+    "objectID": "slides.html#p-rep-layout-1",
+    "href": "slides.html#p-rep-layout-1",
     "title": "Spatially optimised experimental designs with speed",
-    "section": "p-rep layout: checks and a replicated variety",
-    "text": "p-rep layout: checks and a replicated variety\n\n\nThe check (teal) appears 10 times, 5 in each block. V1 (amber) is one of the 30 twice-replicated varieties: one replicate in each block. The other 70 are single replicates (white)."
+    "section": "p-rep layout",
+    "text": "p-rep layout\n\n\nThe check (teal) appears 10 times, 5 in each block. V1 (amber) is one of the 30 twice-replicated varieties: one replicate in each block. The other 70 are single replicates (white)."
   },
   {
     "objectID": "slides.html#also-covered-in-the-vignettes",
@@ -291,7 +284,7 @@
     "href": "slides.html#relationship-matrices-the-effect",
     "title": "Spatially optimised experimental designs with speed",
     "section": "Relationship matrices: the effect",
-    "text": "Relationship matrices: the effect\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTiles show each treatment’s group (A: highly related, D: unrelated).\n\nBoth runs use seed 42. Group A (similarity 0.8) is pushed apart the most; group D (0.0) is free to sit together, which is why D tiles still touch.\nMeasured on this design (related pairs among neighbours, weighted by the matrix): default 6.8, with the relationship matrix 0.0. Over 20 seeds the means are 7.3 and 0.0.\nThe final scores are identical (4.27) in both runs: neither has any same-treatment neighbours, and both reach the same balance score. So the score alone does not show the difference; the relationship only changes which layouts count as good, not how good the best one scores."
+    "text": "Relationship matrices: the effect\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTiles show each treatment’s relationship group (A: highly related, D: unrelated) not treatment.\n\nBoth runs use seed 42. Group A (similarity 0.8) is pushed apart the most; group D (0.0) is free to sit together, which is why D tiles still touch.\nMeasured on this design (related pairs among neighbours, weighted by the matrix): default 6.8, with the relationship matrix 0.0. Over 20 seeds the means are 7.3 and 0.0.\nThe final scores are identical (4.27) in both runs: neither has any same-treatment neighbours, and both reach the same balance score. So the score alone does not show the difference; the relationship only changes which layouts count as good, not how good the best one scores."
   },
   {
     "objectID": "slides.html#custom-objectives",
