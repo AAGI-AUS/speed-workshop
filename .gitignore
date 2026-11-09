@@ -11,3 +11,7 @@ figures/
 *_cache/
 
 **/*.quarto_ipynb
+
+# Copies of extension resources that Quarto leaves in the project root
+/AAGI_logo.svg
+/FiraCode-*
