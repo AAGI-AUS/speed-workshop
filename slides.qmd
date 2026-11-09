@@ -4,7 +4,7 @@ subtitle: "AAGI Symposium 2026 workshop"
 author:
   - name: "Sam Rogers and Wasin Pipattungsakul"
     email: "sam.rogers@adelaide.edu.au"
-date: last-modified
+date: 2026-11-11
 date-format: long
 format:
   aagi-revealjs:
@@ -71,8 +71,8 @@ try(ggplot2::theme_set(AAGIThemes::theme_aagi()), silent = TRUE)
 
 ## Getting set up
 
-- Workshop page: <!-- TODO: URL -->
-- Copy code from the **Exercises** page, not from the slides
+- Workshop page: <https://aagi-aus.github.io/speed-workshop/>
+- Slides and exercises are on that page. You can copy code from the slides.
 
 ```{r}
 #| eval: false
@@ -80,6 +80,7 @@ try(ggplot2::theme_set(AAGIThemes::theme_aagi()), silent = TRUE)
 pak::pak("biometryhub/speed")
 ```
 
+<br><br>
 I will assume a working knowledge of experimental design, but please ask if something isn't clear.
 
 ## Does it work for you?
@@ -121,7 +122,19 @@ autoplot(speed(d,
 - Optimisation problem...
 
 
-![](randomisations.png)
+:::: columns
+::: {.column width="33%"}
+![Systematic](systematic.svg){fig-align="center"}
+:::
+
+::: {.column width="33%"}
+![Fully random](fully_random.svg){fig-align="center"}
+:::
+
+::: {.column width="33%"}
+![Restricted randomisation](restricted_random.svg){fig-align="center"}
+:::
+::::
 
 # How speed works
 
@@ -226,8 +239,12 @@ head(sbd_design)
 sbd_result <- speed(sbd_design,
                     swap = "treatment",
                     seed = 42)
+```
+
+```{r}
 sbd_result
 ```
+
 
 ## SBD: plot
 
@@ -273,18 +290,6 @@ sbbd_result <- speed(sbbd_design,
 #| fig-align: center
 autoplot(sbbd_result)
 ```
-
-## Latin square
-
-```{r}
-ls_design <- initialise_design_df(items = 5, nrows = 5, ncols = 5)
-ls_result <- speed(ls_design, swap = "treatment", seed = 42)
-ls_result$score
-```
-
-::: notes
-Score of 0 means it found a Latin square without being told to.
-:::
 
 ## Your turn
 
@@ -448,7 +453,7 @@ them complete.
 autoplot(prep_result, treatments = "entry")
 ```
 
-## p-rep layout: checks and a replicated variety
+## p-rep layout
 
 ```{r}
 #| echo: false
@@ -636,7 +641,7 @@ autoplot(rel_result, treatments = "group") +
 :::
 :::
 
-Tiles show each treatment's **group** (A: highly related, D: unrelated).
+Tiles show each treatment's _relationship group_ (A: highly related, D: unrelated) not _treatment_.
 
 ::: notes
 Both runs use seed 42. Group A (similarity 0.8) is pushed apart the most; group
