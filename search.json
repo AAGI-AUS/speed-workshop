@@ -354,14 +354,14 @@
     "href": "index.html",
     "title": "Spatially optimised experimental designs with speed",
     "section": "",
-    "text": "You need R (≥ 4.1) and the speed package:\ninstall.packages(\"pak\")\npak::pak(\"biometryhub/speed\")\nCheck that it works:\nlibrary(speed)\nd &lt;- initialise_design_df(items = 4, nrows = 4, ncols = 4)\nautoplot(speed(d, swap = \"treatment\", seed = 1))"
+    "text": "You need R (≥ 4.1) and the speed package:\ninstall.packages(\"pak\")\npak::pak(\"biometryhub/speed\")\nCheck that it works:\nlibrary(speed)\nd &lt;- initialise_design_df(4, 4, 4)\nautoplot(speed(d, swap = \"treatment\", seed = 1))"
   },
   {
     "objectID": "index.html#before-the-workshop",
     "href": "index.html#before-the-workshop",
     "title": "Spatially optimised experimental designs with speed",
     "section": "",
-    "text": "You need R (≥ 4.1) and the speed package:\ninstall.packages(\"pak\")\npak::pak(\"biometryhub/speed\")\nCheck that it works:\nlibrary(speed)\nd &lt;- initialise_design_df(items = 4, nrows = 4, ncols = 4)\nautoplot(speed(d, swap = \"treatment\", seed = 1))"
+    "text": "You need R (≥ 4.1) and the speed package:\ninstall.packages(\"pak\")\npak::pak(\"biometryhub/speed\")\nCheck that it works:\nlibrary(speed)\nd &lt;- initialise_design_df(4, 4, 4)\nautoplot(speed(d, swap = \"treatment\", seed = 1))"
   },
   {
     "objectID": "index.html#materials",
