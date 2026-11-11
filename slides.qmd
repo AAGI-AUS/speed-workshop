@@ -55,6 +55,16 @@ summary_part <- function(x, part = c("structure", "evaluation")) {
 try(ggplot2::theme_set(AAGIThemes::theme_aagi()), silent = TRUE)
 ```
 
+
+## Remembrance Day
+
+![](cenotaph_merged.jpg){fig-align="center" width="90%"}
+
+::: {style="text-align: center;"}
+*Lest we forget*
+:::
+
+
 ## Plan for today
 
 - Setup check
