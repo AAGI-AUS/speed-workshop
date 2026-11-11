@@ -64,6 +64,22 @@ try(ggplot2::theme_set(AAGIThemes::theme_aagi()), silent = TRUE)
 *Lest we forget*
 :::
 
+```{=html}
+<div id="silence-timer" title="Click to start / reset"
+     style="position: absolute; right: 0.5em; bottom: 0.5em; padding: 0.2em 0.6em;
+            font-size: 0.9em; font-variant-numeric: tabular-nums; cursor: pointer;
+            border: 1px solid #888; border-radius: 0.4em; opacity: 0.6; user-select: none;"
+     onclick="(function (el) {
+       if (el._t) { clearInterval(el._t); el._t = null; el.textContent = '1:00'; return; }
+       var end = Date.now() + 60000;
+       el._t = setInterval(function () {
+         var s = Math.max(0, Math.ceil((end - Date.now()) / 1000));
+         el.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+         if (s === 0) { clearInterval(el._t); el._t = null; }
+       }, 200);
+     })(this)">1:00</div>
+```
+
 
 ## Plan for today
 
